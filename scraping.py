@@ -25,7 +25,6 @@ def get_issues_data(url):
         work_form_result = work_form(text)
         work_type_result = work_type(text)
         text_url = regex_url(text)
-        description = issue_text
         r.close()
         save_data(user,title,email,work_form_result,work_type_result,text_url)
         emails.add(email)
