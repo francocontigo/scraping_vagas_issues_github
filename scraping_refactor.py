@@ -175,9 +175,15 @@ def main():
     data_processor = DataProcessor(url)
 
     inicio = time.time()
+    
+    directory = "data"
+    output_file = "data.csv"
+    file_path = os.path.join(directory, output_file)
+    with open(file_path, "w", encoding="utf-8") as file:
+        print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
+        
     data_processor.process_issues_data()
     fim = time.time()
-
     print(f"Time taken: {fim - inicio} seconds")
 
 if __name__ == "__main__":
