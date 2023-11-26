@@ -166,6 +166,18 @@ class DataProcessor:
         return {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
         }
+        
+    def clean_local_data(self):  
+        directory = "data"
+        output_file = "data.csv"
+        file_path = os.path.join(directory, output_file)
+        with open(file_path, "w", encoding="utf-8") as file:
+            print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
+            
+        output_file = "emails.txt"
+        file_path = os.path.join(directory, output_file)
+        with open(file_path, "w", encoding="utf-8"):
+            print("")
 
 def main():
     """
@@ -175,13 +187,8 @@ def main():
     data_processor = DataProcessor(url)
 
     inicio = time.time()
-    
-    directory = "data"
-    output_file = "data.csv"
-    file_path = os.path.join(directory, output_file)
-    with open(file_path, "w", encoding="utf-8") as file:
-        print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
-        
+
+    data_processor.clean_local_data()
     data_processor.process_issues_data()
     fim = time.time()
     print(f"Time taken: {fim - inicio} seconds")

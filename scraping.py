@@ -80,19 +80,26 @@ def save_data(user,title,email,work_form_result,work_type_result,text_url):
     with open(file_path, "a",  encoding="utf-8") as file:
         print(f"{user},{title},{email},{work_form_result},{work_type_result},{text_url}", file=file)
 
+def clean_local_data():  
+        directory = "data"
+        output_file = "data.csv"
+        file_path = os.path.join(directory, output_file)
+        with open(file_path, "w", encoding="utf-8") as file:
+            print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
+            
+        output_file = "emails.txt"
+        file_path = os.path.join(directory, output_file)
+        with open(file_path, "w", encoding="utf-8"):
+            print("")    
+
 def main(url):
+    clean_local_data()
     get_issues_data(url)
 
 
 if __name__ == "__main__":
     inicio = time.time()
     url = "https://github.com/datascience-br/vagas/issues/"
-    
-    directory = "data"
-    output_file = "data.csv"
-    file_path = os.path.join(directory, output_file)
-    with open(file_path, "w", encoding="utf-8") as file:
-        print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
         
     main(url)
     fim = time.time()
