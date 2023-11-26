@@ -56,15 +56,16 @@ class DataProcessor:
 
     def process_issues_data(self):
         """
-        Processes information from all GitHub issues and saves the data.
+        Processes information from each GitHub issue, utilizing parallel processing for efficiency.
+
+        This method retrieves the total number of GitHub issues, and then employs parallel processing to
+        imultaneously process information from each issue. The processed data is then saved.
         """
         issue_number = self.get_issue_number()
 
         def process_single_issue(i):
             self.process_issue(i)
         Parallel(n_jobs=-1)(delayed(process_single_issue)(i) for i in range(1, issue_number + 1))
-
-        self.save_emails()
 
     def regex_email(self, text):
         """
@@ -128,19 +129,6 @@ class DataProcessor:
         text_url = re.findall(r'\b(https?://(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-z]{2,})+(?:[^\s]*)?)\b', text)
         return text_url[0] if text_url else None
 
-    def save_emails(self):
-        """
-        Saves extracted email addresses to a file.
-        """
-        directory = "data"
-        output_file = "emails.txt"
-        file_path = os.path.join(directory, output_file)
-
-        with open(file_path, "w") as file:
-            for email in self.emails:
-                if email:
-                    file.write(email + "\n")
-
     def save_data(self, user, title, email, work_form_result, work_type_result, text_url):
         """
         Saves processed data to a CSV file.
@@ -154,6 +142,14 @@ class DataProcessor:
             text_url (str or None): The extracted URL.
         """
         directory = "data"
+        
+        output_file = "emails.txt"
+        file_path = os.path.join(directory, output_file)
+        
+        if email:
+            with open(file_path, "a", encoding="utf-8") as file:
+                print(f"{email}", file=file)
+        
         output_file = "data.csv"
         file_path = os.path.join(directory, output_file)
 
@@ -171,6 +167,19 @@ class DataProcessor:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
         }
 
+    def clean_local_data(self):  
+        directory = "data"
+        output_file = "data.csv"
+        file_path = os.path.join(directory, output_file)
+        with open(file_path, "w", encoding="utf-8") as file:
+            print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
+            
+        output_file = "emails.txt"
+        file_path = os.path.join(directory, output_file)
+        with open(file_path, "w", encoding="utf-8"):
+            print("")
+
+
 def main():
     """
     The main function that initiates the data processing and measures the time taken.
@@ -179,13 +188,7 @@ def main():
     data_processor = DataProcessor(url)
 
     inicio = time.time()
-    
-    directory = "data"
-    output_file = "data.csv"
-    file_path = os.path.join(directory, output_file)
-    with open(file_path, "w", encoding="utf-8") as file:
-        print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
-        
+    data_processor.clean_local_data()
     data_processor.process_issues_data()
     fim = time.time()
     print(f"Time taken: {fim - inicio} seconds")
