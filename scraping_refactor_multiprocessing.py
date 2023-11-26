@@ -18,7 +18,6 @@ class DataProcessor:
         """
         self.url = url
         self.session = HTMLSession()
-        self.emails = set()
 
     def get_issue_number(self):
         """
@@ -52,7 +51,6 @@ class DataProcessor:
         text_url = self.regex_url(text)
         r.close()
         self.save_data(user, title, email, work_form_result, work_type_result, text_url)
-        self.emails.add(email) if email else None
 
     def process_issues_data(self):
         """
