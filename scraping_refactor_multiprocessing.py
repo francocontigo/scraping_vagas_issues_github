@@ -16,6 +16,9 @@ class DataProcessor:
         Parameters:
             url (str): The URL of the GitHub issues page.
         """
+        self.directory = "data"
+        self.output_file_csv = "data.csv"
+        self.output_file_email = "emails.txt"
         self.url = url
         self.session = HTMLSession()
 
@@ -139,18 +142,13 @@ class DataProcessor:
             work_type_result (str): The determined work type.
             text_url (str or None): The extracted URL.
         """
-        directory = "data"
         
-        output_file = "emails.txt"
-        file_path = os.path.join(directory, output_file)
-        
+        file_path = os.path.join(self.directory, self.output_file_email)
         if email:
             with open(file_path, "a", encoding="utf-8") as file:
                 print(f"{email}", file=file)
         
-        output_file = "data.csv"
-        file_path = os.path.join(directory, output_file)
-
+        file_path = os.path.join(self.directory, self.output_file_csv)
         with open(file_path, "a", encoding="utf-8") as file:
             print(f"{user},{title},{email},{work_form_result},{work_type_result},{text_url}", file=file)
 
@@ -166,14 +164,11 @@ class DataProcessor:
         }
 
     def clean_local_data(self):  
-        directory = "data"
-        output_file = "data.csv"
-        file_path = os.path.join(directory, output_file)
+        file_path = os.path.join(self.directory, self.output_file_csv)
         with open(file_path, "w", encoding="utf-8") as file:
             print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
             
-        output_file = "emails.txt"
-        file_path = os.path.join(directory, output_file)
+        file_path = os.path.join(self.directory, self.output_file_email)
         with open(file_path, "w", encoding="utf-8"):
             print("")
 
