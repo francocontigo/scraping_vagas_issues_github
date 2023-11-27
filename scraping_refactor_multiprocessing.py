@@ -18,7 +18,9 @@ class DataProcessor:
         """
         self.directory = "data"
         self.output_file_csv = "data.csv"
+        self.file_path_csv = os.path.join(self.directory, self.output_file_csv)
         self.output_file_email = "emails.txt"
+        self.file_path_email = os.path.join(self.directory, self.output_file_email)
         self.url = url
         self.session = HTMLSession()
 
@@ -143,13 +145,11 @@ class DataProcessor:
             text_url (str or None): The extracted URL.
         """
         
-        file_path = os.path.join(self.directory, self.output_file_email)
         if email:
-            with open(file_path, "a", encoding="utf-8") as file:
+            with open(self.file_path_email, "a", encoding="utf-8") as file:
                 print(f"{email}", file=file)
         
-        file_path = os.path.join(self.directory, self.output_file_csv)
-        with open(file_path, "a", encoding="utf-8") as file:
+        with open(self.file_path_csv, "a", encoding="utf-8") as file:
             print(f"{user},{title},{email},{work_form_result},{work_type_result},{text_url}", file=file)
 
     def get_headers(self):
@@ -164,20 +164,18 @@ class DataProcessor:
         }
 
     def clean_local_data(self):  
-        file_path = os.path.join(self.directory, self.output_file_csv)
-        with open(file_path, "w", encoding="utf-8") as file:
+        with open(self.file_path_csv, "w", encoding="utf-8") as file:
             print(f"user,title,email,work_form_result,work_type_result,text_url", file=file)
-            
-        file_path = os.path.join(self.directory, self.output_file_email)
-        with open(file_path, "w", encoding="utf-8"):
+
+        with open(self.file_path_email, "w", encoding="utf-8"):
             print("")
 
     def clean_email_duplicates(self):
         emails = set()
-        file_path = os.path.join(self.directory, self.output_file_email)
-        for line in open(file_path):
+        
+        for line in open(self.file_path_email):
             emails.add(line)
-        with open(file_path, "w") as file:
+        with open(self.file_path_email, "w") as file:
             for email in emails:
                     file.write(email)
             
