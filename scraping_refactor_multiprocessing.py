@@ -172,6 +172,15 @@ class DataProcessor:
         with open(file_path, "w", encoding="utf-8"):
             print("")
 
+    def clean_email_duplicates(self):
+        emails = set()
+        file_path = os.path.join(self.directory, self.output_file_email)
+        for line in open(file_path):
+            emails.add(line)
+        with open(file_path, "w") as file:
+            for email in emails:
+                    file.write(email)
+            
 
 def main():
     """
@@ -183,6 +192,7 @@ def main():
     inicio = time.time()
     data_processor.clean_local_data()
     data_processor.process_issues_data()
+    data_processor.clean_email_duplicates()
     fim = time.time()
     print(f"Time taken: {fim - inicio} seconds")
 
